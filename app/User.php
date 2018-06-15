@@ -9,20 +9,10 @@ class User extends Authenticatable
 {
     use Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
     protected $fillable = [
         'name', 'email', 'password',
     ];
 
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
     protected $hidden = [
         'password', 'remember_token',
     ];
@@ -39,14 +29,11 @@ class User extends Authenticatable
 
     public function want($itemId)
     {
-        // Is the user already "want"?
         $exist = $this->is_wanting($itemId);
 
         if ($exist) {
-            // do nothing
             return false;
         } else {
-            // do "want"
             $this->items()->attach($itemId, ['type' => 'want']);
             return true;
         }
@@ -54,14 +41,11 @@ class User extends Authenticatable
 
     public function dont_want($itemId)
     {
-        // Is the user already "want"?
         $exist = $this->is_wanting($itemId);
 
         if ($exist) {
-            // remove "want"
             \DB::delete("DELETE FROM item_user WHERE user_id = ? AND item_id = ? AND type = 'want'", [\Auth::user()->id, $itemId]);
         } else {
-            // do nothing
             return false;
         }
     }
